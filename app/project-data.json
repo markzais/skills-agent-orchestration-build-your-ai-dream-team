@@ -1,0 +1,32 @@
+{
+  "projects": [
+    {
+      "name": "Community Docs",
+      "owner": "Mona",
+      "status": "In progress",
+      "recentActivity": "Contributor onboarding guide is ready for review.",
+      "priority": "High"
+    },
+    {
+      "name": "Open Source Hub",
+      "owner": "Alex",
+      "status": "On track",
+      "recentActivity": "The monthly maintainer sync notes were published.",
+      "priority": "Medium"
+    },
+    {
+      "name": "Accessibility Refresh",
+      "owner": "Priya",
+      "status": "Needs attention",
+      "recentActivity": "Keyboard navigation audit identified three follow-up items.",
+      "priority": "High"
+    },
+    {
+      "name": "Contributor Events",
+      "owner": "Jordan",
+      "status": "Planning",
+      "recentActivity": "Fall workshop dates are being coordinated with local teams.",
+      "priority": "Low"
+    }
+  ]
+}

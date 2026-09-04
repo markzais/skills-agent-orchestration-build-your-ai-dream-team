@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="eyebrow">Contributor dashboard</p>
+      <h1>Project Pulse</h1>
+      <p>Stay close to the work that keeps our community moving.</p>
+    </header>
+
+    <main class="dashboard" aria-labelledby="projects-heading">
+      <div class="section-heading">
+        <h2 id="projects-heading">Projects</h2>
+        <p>Current status, activity, and priority at a glance.</p>
+      </div>
+      <section id="project-list" class="project-list" aria-live="polite" aria-busy="true">
+        <p class="loading-state">Loading projects...</p>
+      </section>
+    </main>
+
+    <script>
+      const projectList = document.querySelector("#project-list");
+      const requiredFields = ["name", "owner", "status", "recentActivity", "priority"];
+
+      function showError(message) {
+        projectList.replaceChildren();
+        const error = document.createElement("p");
+        error.className = "error-state";
+        error.setAttribute("role", "alert");
+        error.textContent = message;
+        projectList.append(error);
+        projectList.setAttribute("aria-busy", "false");
+      }
+
+      function addDetail(card, label, value, className) {
+        const detail = document.createElement("div");
+        detail.className = "project-detail";
+
+        const detailLabel = document.createElement("dt");
+        detailLabel.textContent = label;
+        const detailValue = document.createElement("dd");
+        detailValue.className = className;
+        detailValue.textContent = value;
+
+        detail.append(detailLabel, detailValue);
+        card.append(detail);
+      }
+
+      function renderProjects(data) {
+        if (!data || !Array.isArray(data.projects)) {
+          throw new Error("Project data must contain a top-level projects array.");
+        }
+
+        const projects = data.projects.map((project, index) => {
+          if (!project || requiredFields.some((field) => typeof project[field] !== "string" || !project[field].trim())) {
+            throw new Error(`Project ${index + 1} is missing a required field.`);
+          }
+          return project;
+        });
+
+        if (projects.length === 0) {
+          throw new Error("No projects are available to display.");
+        }
+
+        const fragment = document.createDocumentFragment();
+        projects.forEach((project) => {
+          const card = document.createElement("article");
+          card.className = "project-card";
+
+          const heading = document.createElement("h3");
+          heading.textContent = project.name;
+          card.append(heading);
+
+          const owner = document.createElement("p");
+          owner.className = "project-owner";
+          owner.textContent = `Owner: ${project.owner}`;
+          card.append(owner);
+
+          const details = document.createElement("dl");
+          card.append(details);
+          addDetail(details, "Status", project.status, "project-status");
+          addDetail(details, "Recent activity", project.recentActivity, "project-activity");
+          addDetail(details, "Priority", project.priority, "project-priority");
+
+          fragment.append(card);
+        });
+
+        projectList.replaceChildren(fragment);
+        projectList.setAttribute("aria-busy", "false");
+      }
+
+      fetch("project-data.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Project data could not be loaded (${response.status}).`);
+          }
+          return response.json();
+        })
+        .then(renderProjects)
+        .catch((error) => showError(`Unable to load projects: ${error.message}`));
+    </script>
+  </body>
+</html>
