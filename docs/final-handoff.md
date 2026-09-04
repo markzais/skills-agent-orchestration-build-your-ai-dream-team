@@ -32,8 +32,8 @@ The team contributions were:
   shadows, status badges, priority badges, and reduced-motion handling.
 - `app/project-data.json` contains a top-level `projects` array. Every record
   includes `name`, `owner`, `status`, `recentActivity`, and `priority`.
-- `.vscode/launch.json` contains the exact launch name **Run Project Pulse
-  Dashboard**, serves from the `app` directory with
+- `.vscode/launch.json` contains the exact launch name Run Project Pulse Dashboard,
+  serves from the `app` directory with
   `python3 -m http.server 5500`, and opens `index.html` through its
   `serverReadyAction`.
 
